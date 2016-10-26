@@ -1,8 +1,5 @@
 import java.io.*;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 public class msaassignment1 {
 
@@ -16,6 +13,10 @@ public class msaassignment1 {
 		String[] tag;
 		int a=0;
 		int[] values1, values2;
+		int idofphoto=0;
+		ArrayList listofid = new ArrayList();
+		ArrayList listoftags = new ArrayList();
+		
 		try{ 
 			is = new BufferedReader(new FileReader("../csv/tags.csv"));
 			while((s=is.readLine())!= null){
@@ -28,10 +29,25 @@ public class msaassignment1 {
 				
 			}
 			is = new BufferedReader(new FileReader("../csv/photos_tags.csv"));
-			while((s=is.readLine())!= null){
+			while((s=is.readLine())!= null){	
+
 				tag = s.split(",");
-				
+				listofid.add(tag[0]);
+				listoftags.add(tag[1]);
+			
 			}
+			for(int i=0;i<listofid.size();i++){
+
+				if(listofid.get(i)==listofid.get(i+1)){
+					for(int j=0;j<listofid.size();i++){
+						if(listofid.get(j)==listofid.get(i))
+							photoandtags2.put(listoftags.get(i), photoandtags1.get(listoftags.get(j), photoandtags1.get(listoftags.get(j))+1));
+						}
+					}
+
+				}
+
+			
 			System.out.println(photoandtags1.get("explore"));
 		
 		}
