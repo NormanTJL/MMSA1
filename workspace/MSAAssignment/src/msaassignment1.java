@@ -14,8 +14,8 @@ public class msaassignment1 {
 		int a=0;
 		int[] values1, values2;
 		int idofphoto=0;
-		ArrayList listofid = new ArrayList();
-		ArrayList listoftags = new ArrayList();
+		ArrayList<String> listofid = new ArrayList<String>();
+		ArrayList<String> listoftags = new ArrayList<String>();
 		
 		try{ 
 			is = new BufferedReader(new FileReader("../csv/tags.csv"));
@@ -25,9 +25,11 @@ public class msaassignment1 {
 					phototag.add(tag[0]);
 					photoandtags1.put(tag[0], 0);
 					photoandtags2.put(tag[0], photoandtags1);
+
 				}		
-				
+			
 			}
+
 			is = new BufferedReader(new FileReader("../csv/photos_tags.csv"));
 			while((s=is.readLine())!= null){	
 
@@ -36,19 +38,18 @@ public class msaassignment1 {
 				listoftags.add(tag[1]);
 			
 			}
+			int z=0;
 			for(int i=0;i<listofid.size();i++){
-
-				if(listofid.get(i)==listofid.get(i+1)){
-					for(int j=0;j<listofid.size();i++){
-						if(listofid.get(j)==listofid.get(i))
-							photoandtags2.put(listoftags.get(i), photoandtags1.get(listoftags.get(j), photoandtags1.get(listoftags.get(j))+1));
+					for(int j=0;j<listofid.size();j++){
+						//System.out.println(photoandtags1.get(j));
+						if(listofid.get(i)==listofid.get(j)){
+							photoandtags2.get(listoftags.get(i)).put(listoftags.get(j), photoandtags2.get(listoftags.get(i)).get(listoftags.get(j))+1);
+							//System.out.println("asd");
 						}
 					}
 
-				}
-
-			
-			System.out.println(photoandtags1.get("explore"));
+			}
+			System.out.println(photoandtags2.get("explore").get("macro"));
 		
 		}
 		catch(Exception e){
