@@ -1,13 +1,14 @@
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class msaassignment1 {
-
+		static Map<String, Double> innermap = new HashMap<String, Double>();
+		static Map<String, Map<String, Double>> outermap = new HashMap<String, Map<String, Double>>();
 	public static void main(String[] args){
-		
+		PrintWriter pw;
 		Set<String> phototag = new HashSet<String>();
-		Map<String, Double> innermap = new HashMap<String, Double>();
-		Map<String, Map<String, Double>> outermap = new HashMap<String, Map<String, Double>>();
+		
 		BufferedReader is = null;
 		String s;
 		String[] tag;
@@ -52,6 +53,7 @@ public class msaassignment1 {
 			
 		}
 		finally{
+			
 			for(int i=0;i<listofid.size();i++){
 					for(int j=i+1;j<listofid.size();j++){
 						//System.out.println(photoandtags1.get(j));
@@ -66,30 +68,95 @@ public class msaassignment1 {
 					}
 
 			}
-			PrintWriter pw = new PrintWriter(new File("coocurrence.csv"));
-        	StringBuilder sb = new StringBuilder();
-        	ArrayList<String> everyline = new ArrayList<String>();
+			try{	
+				pw = new PrintWriter(new File("coocurrence.csv"));	
+				StringBuilder sb = new StringBuilder();
+        		ArrayList<String> everyline = new ArrayList<String>();
+        		String firstLine = "\t";
 
-        	
-        	for(int z=0; z<outermap.size();z++){
-        		String oneline="";
-        		for(int x=0; x<outermap.get(z).size(); x++){
-
-        			if(x+1 != outermap.get(z).size()){
-
-        			oneline.concat(outermap.get(z).get(x));
-
-        			oneline.concat(",");
-        			}
-        			else{
-        			oneline.concat("\n");
-        			}
+        		for(String tag1:phototag){
+        			firstLine = firstLine + tag1;
+        			firstLine= firstLine +",";
+        		
         		}
-        		everyline.add(oneline);
+        		firstLine = firstLine.substring(0, firstLine.length()-1);
+        		firstLine = firstLine+"\n";
+        	
+        		for(String key1: outermap.keySet()){
+        			String oneline="";
+        			oneline = oneline + key1+" ,";
+        			for(String key2:outermap.get(key1).keySet()){
+        				oneline = oneline + outermap.get(key1).get(key2).toString()+",";
+        			}
+        			oneline = oneline.substring(0, oneline.length()-1);
+
+        			oneline = oneline + "\n";
+        			everyline.add(oneline);
+        		}
+        		sb.append(firstLine);
+        		for(String eachline:everyline){
+        			sb.append(eachline);
+        		}
+        		pw.write(sb.toString());
+        		pw.close();
+			}
+			catch(Exception e){ 
+
+			}
+			finally{
+
+				printTop5("water");
+				printTop5("people");
+				printTop5("london");
+        	
         	}
 
 		}
+		
 	}
+	public static void printTop5(String key){
+		Map<String, Double>hmap = outermap.get(key);
+		hmap = sortByValue(hmap);
+		int count=0;
 
+
+		System.out.print(key + " values : ");
+		for(String k1:hmap.keySet()){
+			Double totalval=0.0;
+			if(count < 5){
+				
+				totalval=hmap.get(k1);
+
+				System.out.print(k1+":");
+				System.out.print(totalval+",\t");
+			}
+			count++;
+		}
+		System.out.print("\n");
+
+	}
+	/*public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
+    return map.entrySet().stream().sorted(Map.Entry.comparingByValue(Collections.reverseOrder())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+	}
+*/
+
+	public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue( Map<K, V> map )
+    {
+        List<Map.Entry<K, V>> list = new LinkedList<Map.Entry<K, V>>( map.entrySet() );
+        Collections.sort(list, new Comparator<Map.Entry<K, V>>()
+        {
+            public int compare( Map.Entry<K, V> o1, Map.Entry<K, V> o2 )
+            {
+                return (o1.getValue()).compareTo( o2.getValue() );
+            }
+        } );
+        Collections.reverse(list);
+        Map<K, V> result = new LinkedHashMap<K, V>();
+        for (Map.Entry<K, V> entry : list)
+        {
+            result.put( entry.getKey(), entry.getValue() );
+        }
+        return result;
+    }
 	
 }
