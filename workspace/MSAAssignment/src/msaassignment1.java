@@ -108,18 +108,93 @@ public class msaassignment1 {
 				printTop5("water");
 				printTop5("people");
 				printTop5("london");
-        	
+        		printTop5IDF("water");
+        		printTop5IDF("people");
+        		printTop5IDF("london");
         	}
 
 		}
 		
+	}
+	public static Integer getN(){
+		Set<String> phototag = new HashSet<String>();
+		BufferedReader is = null;
+		String s;
+		String[] tag;
+		try{
+		is = new BufferedReader(new FileReader("../csv/photos.csv"));
+			while((s=is.readLine())!= null){
+				tag = s.split(",");	
+				if(!phototag.contains(tag[0])){
+					phototag.add(tag[0]);
+					//innermap.put(tag[0], 0);
+					//
+				}		
+			
+			}
+		}
+		catch(Exception e){
+
+		}
+		finally{
+
+			return phototag.size();
+		}
+	}
+	public static Integer getNT(String key){
+		
+		BufferedReader is = null;
+		String s;
+		String[] tag;
+		try{
+		is = new BufferedReader(new FileReader("../csv/tags.csv"));
+			while((s=is.readLine())!= null){
+				tag = s.split(",");	
+				if(tag[0].equals(key)){
+					return Integer.parseInt(tag[1]);
+					//innermap.put(tag[0], 0);
+					//
+				}		
+			
+			}
+		}
+		catch(Exception e){
+
+		}
+		return 0;
+		
+	}
+	public static void printTop5IDF(String key){
+		Map<String, Double>hmap = outermap.get(key);
+		Map<String, Double>hmap1 = new HashMap<String, Double>();
+		Double finalval;
+		int count=0;
+		for(String k2:hmap.keySet()){
+			finalval = (Math.log10(getN()/getNT(k2))) * hmap.get(k2);
+			hmap1.put(k2, finalval);
+		}
+		hmap1 = sortByValue(hmap1);
+		System.out.println("Part 3 : ");
+		System.out.print(key + " values : ");
+		for(String k1:hmap1.keySet()){
+			Double totalval=0.0;
+			if(count < 5){
+				
+				totalval=hmap1.get(k1);
+
+				System.out.print(k1+":");
+				System.out.print(totalval+",\t");
+			}
+			count++;
+		}
+		System.out.print("\n");
 	}
 	public static void printTop5(String key){
 		Map<String, Double>hmap = outermap.get(key);
 		hmap = sortByValue(hmap);
 		int count=0;
 
-
+		System.out.println("Part 2 : ");
 		System.out.print(key + " values : ");
 		for(String k1:hmap.keySet()){
 			Double totalval=0.0;
